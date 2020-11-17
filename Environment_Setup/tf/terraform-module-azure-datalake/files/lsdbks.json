@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string"
+        },
+        "accessToken": {
+            "type": "secureString"
+        },
+        "domain": {
+            "type": "string"
+        },
+        "databricksLinkedServiceName": {
+            "type": "string"
+        },
+        "clusterId": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/', parameters('databricksLinkedServiceName'))]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "AzureDatabricks",
+                "typeProperties": {
+                    "domain": "[parameters('domain')]",
+                    "accessToken": {
+                        "type": "SecureString",
+                        "value": "[parameters('accessToken')]"
+                    },
+                    "existingClusterId": "[parameters('clusterId')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "databricksLinkedServiceName": {
+            "type": "string",
+            "value": "[parameters('databricksLinkedServiceName')]"
+        },
+        "databricksLinkedServiceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), parameters('databricksLinkedServiceName'))]"
+        }
+    }
+}
